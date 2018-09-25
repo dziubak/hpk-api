@@ -1,2 +1,2 @@
-# hpk-bot
-Bot for hpk
+# hpk-api
+HPK API
