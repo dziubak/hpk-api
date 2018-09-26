@@ -72,7 +72,7 @@ public class TimetableTeacherDao {
             teacher.setSurname(rs.getString(2));
             teacher.setName(rs.getString(3));
             teacher.setMiddleName(rs.getString(4));
-            teacher.setInfo(rs.getString(5));
+            teacher.setDescription(rs.getString(5));
 
             return teacher;
         });
