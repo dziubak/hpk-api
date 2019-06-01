@@ -1,13 +1,12 @@
-package com.hpk.api.component.entities;
+package com.hpk.api.component.model;
 
 import lombok.Data;
 
 @Data
-public class Groupment {
+public class Subject {
 	private int id;
-	private int departmentId;
 	private int teacherId;
 	private String name;
-	private int course;
+	private String abbreviation;
 	private String description;
 }

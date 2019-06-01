@@ -10,7 +10,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Repository;
 
-import com.hpk.api.component.entities.Timetable;
+import com.hpk.api.component.model.Timetable;
 
 @Repository
 public class TimetableGroupDao {

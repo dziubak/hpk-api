@@ -1,40 +1,25 @@
 package com.hpk.api.component.dao;
 
-import com.hpk.api.component.entities.Teacher;
-import com.hpk.api.component.entities.Timetable;
+import com.hpk.api.component.model.Timetable;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.DayOfWeek;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class TimetableTeacherDao {
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
     private final static String SQL_GET_ALL_TEACHERS = "SELECT id, surname, name, middle_name, info FROM hpk_bot.teacher";
-
-    private final static String SQL_GET_TIMETABLE_GENERAL_FOR_TEACHER = "SELECT tt.day_of_week, tt.number_of_couple, tt.position, g.name, " +
-            "t1.surname, t1.name, t1.middle_name, s.name, c1.number, tt.classroom FROM hpk_bot.timetable tt " +
-            "LEFT JOIN `group` g ON tt.group_id = g.id " +
-            "LEFT JOIN teacher t1 ON tt.teacher_id = t1.id " +
-            "LEFT JOIN classroom c1 ON tt.classroom_id = c1.id " +
-            "LEFT JOIN subject s ON tt.subject_id = s.id " +
-            "WHERE (t1.surname=?) " +
-            "UNION " +
-            "SELECT tt.day_of_week, tt.number_of_couple, tt.position, g.name, t2.surname, t2.name, t2.middle_name, s.name, " +
-            "c2.number, tt.classroom FROM hpk_bot.timetable tt " +
-            "LEFT JOIN `group` g ON tt.group_id = g.id " +
-            "LEFT JOIN teacher t2 ON tt.teacher_second_id = t2.id " +
-            "LEFT JOIN classroom c2 ON tt.classroom_second_id = c2.id " +
-            "LEFT JOIN subject s ON tt.subject_id = s.id " +
-            "WHERE (t2.surname=?)";
 
     public class TimetableForTeacherRowMapper implements RowMapper<Timetable> {
         @Override
@@ -53,30 +38,51 @@ public class TimetableTeacherDao {
         }
     }
 
-    public List<Timetable> getTimetableGeneralForTeacher(String surnameTeacher) {
-        return jdbcTemplate.query(SQL_GET_TIMETABLE_GENERAL_FOR_TEACHER, new TimetableForTeacherRowMapper(), surnameTeacher, surnameTeacher);
+    public List<Timetable> getTeacherTimetableById(int teacherId, String position, DayOfWeek dayOfWeek) {
+        String dayOfWeekCondition = dayOfWeek != null ? " AND day_of_week=:dayOfWeek" : "";
+
+        String SQL_GET_TEACHER_TIMETABLE_BY_DAY_AND_POSITION = "SELECT tt.day_of_week, tt.number_of_couple, tt.position, g.name, " +
+                "t1.surname, t1.name, t1.middle_name, s.name, c1.number, tt.classroom FROM timetable tt " +
+                "LEFT JOIN `group` g ON tt.group_id = g.id " +
+                "LEFT JOIN teacher t1 ON tt.teacher_id = t1.id " +
+                "LEFT JOIN classroom c1 ON tt.classroom_id = c1.id " +
+                "LEFT JOIN subject s ON tt.subject_id = s.id " +
+                "WHERE (t1.id=:teacherId) AND tt.position=:position " + dayOfWeekCondition + " " +
+                "UNION " +
+                "SELECT tt.day_of_week, tt.number_of_couple, tt.position, g.name, t2.surname, t2.name, t2.middle_name, s.name, " +
+                "c2.number, tt.classroom FROM timetable tt " +
+                "LEFT JOIN `group` g ON tt.group_id = g.id " +
+                "LEFT JOIN teacher t2 ON tt.teacher_second_id = t2.id " +
+                "LEFT JOIN classroom c2 ON tt.classroom_second_id = c2.id " +
+                "LEFT JOIN subject s ON tt.subject_id = s.id " +
+                "WHERE (t2.id=:teacherId) AND tt.position=:position " + dayOfWeekCondition;
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("teacherId", teacherId);
+        params.put("position", position);
+        params.put("dayOfWeek", dayOfWeek);
+
+        return namedParameterJdbcTemplate.query(SQL_GET_TEACHER_TIMETABLE_BY_DAY_AND_POSITION, params,
+                new TimetableForTeacherRowMapper());
     }
 
-//    public List<Timetable> getTimetableTodayForGroup(String nameGroup) {
-//        return jdbcTemplate.query(SQL_GET_TIMETABLE_TODAY_FOR_GROUP, new TimetableGroupDao.TimetableRowMapper(), nameGroup);
-//    }
-//
-//    public List<Timetable> getTimetableTomorrowForGroup(String nameGroup) {
-//        return jdbcTemplate.query(SQL_GET_TIMETABLE_TOMORROW_FOR_GROUP, new TimetableGroupDao.TimetableRowMapper(), nameGroup);
-//    }
+    public List<Timetable> getGroupTimetableById(int groupId, String position, DayOfWeek dayOfWeek) {
+        String dayOfWeekCondition = dayOfWeek != null ? " AND day_of_week=:dayOfWeek" : "";
 
-    public List<Teacher> getAllTeachersList() {
-        List<Teacher> teachersList = jdbcTemplate.query(SQL_GET_ALL_TEACHERS, (rs, arg1) -> {
-            Teacher teacher = new Teacher();
-            teacher.setId(rs.getInt(1));
-            teacher.setSurname(rs.getString(2));
-            teacher.setName(rs.getString(3));
-            teacher.setMiddleName(rs.getString(4));
-            teacher.setInfo(rs.getString(5));
+        String SQL_GET_TEACHER_TIMETABLE_BY_DAY_AND_POSITION = "SELECT tt.day_of_week, tt.number_of_couple, tt.position, g.name, " +
+                "t1.surname, t1.name, t1.middle_name, s.name, c1.number, tt.classroom FROM timetable tt " +
+                "LEFT JOIN `group` g ON tt.group_id = g.id " +
+                "LEFT JOIN teacher t1 ON tt.teacher_id = t1.id " +
+                "LEFT JOIN classroom c1 ON tt.classroom_id = c1.id " +
+                "LEFT JOIN subject s ON tt.subject_id = s.id " +
+                "WHERE (g.id=:groupId) AND tt.position=:position " + dayOfWeekCondition;
 
-            return teacher;
-        });
+        Map<String, Object> params = new HashMap<>();
+        params.put("groupId", groupId);
+        params.put("position", position);
+        params.put("dayOfWeek", dayOfWeek);
 
-        return teachersList;
+        return namedParameterJdbcTemplate.query(SQL_GET_TEACHER_TIMETABLE_BY_DAY_AND_POSITION, params,
+                new TimetableForTeacherRowMapper());
     }
 }

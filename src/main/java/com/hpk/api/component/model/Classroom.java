@@ -1,4 +1,4 @@
-package com.hpk.api.component.entities;
+package com.hpk.api.component.model;
 
 import lombok.Data;
 
