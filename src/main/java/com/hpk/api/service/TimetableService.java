@@ -1,7 +1,9 @@
 package com.hpk.api.service;
 
+import com.hpk.api.component.dao.TimetableGroupDao;
 import com.hpk.api.component.dao.TimetableTeacherDao;
-import com.hpk.api.component.model.Timetable;
+import com.hpk.api.component.model.TimetableGroup;
+import com.hpk.api.component.model.TimetableTeacher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +20,9 @@ public class TimetableService {
     @Autowired
     private TimetableTeacherDao timetableTeacherDao;
 
+    @Autowired
+    private TimetableGroupDao timetableGroupDao;
+
     @PostConstruct
     public void init(){
         timetableTime.put("1", "8:30 − 9:50");
@@ -26,11 +31,11 @@ public class TimetableService {
         timetableTime.put("4", "13:20 − 14:40");
     }
 
-    public List<Timetable> getTeacherTimetableById(int teacherId, String position, DayOfWeek dayOfWeek){
+    public List<TimetableTeacher> getTeacherTimetableById(int teacherId, String position, DayOfWeek dayOfWeek){
         return timetableTeacherDao.getTeacherTimetableById(teacherId, position, dayOfWeek);
     }
 
-    public List<Timetable> getGroupTimetableById(int teacherId, String position, DayOfWeek dayOfWeek){
-        return timetableTeacherDao.getGroupTimetableById(teacherId, position, dayOfWeek);
+    public List<TimetableGroup> getGroupTimetableById(int teacherId, String position, DayOfWeek dayOfWeek){
+        return timetableGroupDao.getGroupTimetableById(teacherId, position, dayOfWeek);
     }
 }

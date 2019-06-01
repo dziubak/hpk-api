@@ -14,10 +14,12 @@ public class TeacherDao {
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public List<Teacher> getListTeachersBySurname(Teacher teacher){
+    public List<Teacher> getListTeachersBySurname(String teacherSurname){
         String sql = "SELECT id, surname, name, middle_name, info FROM teacher";
-        String like = " WHERE surname LIKE '" + teacher.getSurname() + "%'";
+        String like = " WHERE surname LIKE '" + teacherSurname + "%'";
 
-        return namedParameterJdbcTemplate.query(sql.concat(like), new TeacherRowMapper());
+        sql = teacherSurname != null ? sql.concat(like) : sql;
+
+        return namedParameterJdbcTemplate.query(sql, new TeacherRowMapper());
     }
 }

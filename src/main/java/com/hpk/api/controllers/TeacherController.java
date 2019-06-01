@@ -1,25 +1,31 @@
 package com.hpk.api.controllers;
 
-import com.hpk.api.component.dao.TeacherDao;
 import com.hpk.api.component.model.Teacher;
+import com.hpk.api.service.TeacherService;
+import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@RequestMapping("/teachers")
+@RequestMapping("/teacher")
+@Api(value="Teacher", description="Teacher. Method to get teacher info")
 public class TeacherController {
 
     @Autowired
-    private TeacherDao teacherDao;
+    private TeacherService teacherService;
 
-    @PostMapping("/get")
-    public List<Teacher> getListTeachersBySurname(@RequestBody Teacher teacher){
-        return teacherDao.getListTeachersBySurname(teacher);
+    @ApiOperation(value = "Get a list of teachers in which the surname begins with the characters specified in the request", response = ArrayList.class)
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully") } )
+    @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<Teacher> getListTeachersBySurname(@ApiParam(value = "Begin surname (characters working with mysql 'LIKE'). If field is empty - get all teachers")@RequestParam(required = false) String teacherSurname){
+        return teacherService.getListTeachersBySurname(teacherSurname);
     }
 
 }

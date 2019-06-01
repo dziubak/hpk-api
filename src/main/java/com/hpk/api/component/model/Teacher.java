@@ -1,12 +1,21 @@
 package com.hpk.api.component.model;
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class Teacher {
+	@ApiModelProperty(notes = "The database generated teacher ID")
 	private int id;
+	@ApiModelProperty(notes = "The database generated department ID. Department")
 	private int departmentId;
+	@ApiModelProperty(notes = "The teacher surname (last name)")
 	private String surname;
+	@ApiModelProperty(notes = "The teacher name (first name)")
 	private String name;
+	@ApiModelProperty(notes = "The teacher middlename (father name)")
 	private String middleName;
+	@ApiModelProperty(notes = "The description (additional info)")
 	private String description;
+	@ApiModelProperty(notes = "The info (additional info)")
 	private String info;
 
 	public int getId() {

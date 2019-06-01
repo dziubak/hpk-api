@@ -25,13 +25,17 @@ repositories {
 
 
 dependencies {
-	compileOnly 'org.projectlombok:lombok:1.18.8'
-	annotationProcessor 'org.projectlombok:lombok:1.18.8'
-
 	// https://mvnrepository.com/artifact/io.springfox/springfox-swagger2
-	compile group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2'
+	compile (group: 'io.springfox', name: 'springfox-swagger2', version: '2.9.2') {
+		exclude group: 'io.swagger', module: 'swagger-annotations'
+		exclude group: 'io.swagger', module: 'swagger-models'
+	}
 	// https://mvnrepository.com/artifact/io.springfox/springfox-swagger-ui
 	compile group: 'io.springfox', name: 'springfox-swagger-ui', version: '2.9.2'
+
+	compile group: 'io.springfox', name: 'swagger-annotations', version: '1.5.21'
+	compile group: 'io.swagger', name: 'swagger-models', version: '1.5.21'
+
 
 	compile('org.springframework.boot:spring-boot-starter-web')
 	compile('org.springframework.boot:spring-boot-starter-jdbc')
