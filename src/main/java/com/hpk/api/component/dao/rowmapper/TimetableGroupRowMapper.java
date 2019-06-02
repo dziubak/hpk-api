@@ -16,12 +16,23 @@ public class TimetableGroupRowMapper implements RowMapper<TimetableGroup> {
         timetableGroup.setNumberOfCouple(rs.getString("numberOfCouple"));
         timetableGroup.setPosition(rs.getString("position"));
         timetableGroup.setGroupName(rs.getString("groupName"));
-        timetableGroup.setTeacher(rs.getString("teacherFirstSurname")
-                + " " + rs.getString("teacherFirstName").substring(0,1)
-                + " " + rs.getString("teacherFirstMiddleName").substring(0, 1));
-        timetableGroup.setTeacherSecond(rs.getString("teacherSecondSurname")
-                + " " + rs.getString("teacherSecondName").substring(0,1)
-                + " " + rs.getString("teacherSecondMiddleName").substring(0, 1));
+
+        String firstTeacherSurname = rs.getString("teacherFirstSurname") != null ? rs.getString("teacherFirstSurname") : "";
+        String firstTeacherName = rs.getString("teacherFirstName") != null ? rs.getString("teacherFirstName").substring(0,1).concat(".") : "";
+        String firstTeacherMiddleName = rs.getString("teacherFirstMiddleName") != null ? rs.getString("teacherFirstMiddleName").substring(0,1).concat(".") : "";
+
+        String firstTeacher = firstTeacherSurname + " " + firstTeacherName + firstTeacherMiddleName;
+
+        timetableGroup.setTeacher(firstTeacher);
+
+        String secondTeacherSurname = rs.getString("teacherSecondSurname") != null ? rs.getString("teacherSecondSurname") : "";
+        String secondTeacherName = rs.getString("teacherSecondName") != null ? rs.getString("teacherSecondName").substring(0,1).concat(".") : "";
+        String secondTeacherMiddleName = rs.getString("teacherSecondMiddleName") != null ? rs.getString("teacherSecondMiddleName").substring(0,1).concat(".") : "";
+
+        String secondTeacher = secondTeacherSurname + " " + secondTeacherName + secondTeacherMiddleName;
+
+        timetableGroup.setTeacherSecond(secondTeacher);
+
         timetableGroup.setSubjectName(rs.getString("subjectName"));
         timetableGroup.setSubjectAbbreviation(rs.getString("subjectAbbreviation"));
         timetableGroup.setClassroom(rs.getString("classroomFirst"));
