@@ -3,6 +3,7 @@ package com.hpk.api.component.dao;
 import com.hpk.api.component.dao.rowmapper.TeacherRowMapper;
 import com.hpk.api.component.model.Teacher;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -21,5 +22,13 @@ public class TeacherDao {
         sql = teacherSurname != null ? sql.concat(like) : sql;
 
         return namedParameterJdbcTemplate.query(sql, new TeacherRowMapper());
+    }
+
+    public Teacher getTeacherById(int teacherId){
+        String sql = "SELECT id, surname, name, middle_name, info FROM teacher WHERE id=:teacherId";
+
+        return namedParameterJdbcTemplate.queryForObject(sql,
+                new MapSqlParameterSource().addValue("teacherId", teacherId),
+                new TeacherRowMapper());
     }
 }

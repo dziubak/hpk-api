@@ -17,4 +17,13 @@ public class GroupService {
         return groupDao.getGroupsByDepartmentIdAndCourse(departmentId, courseNumber);
     }
 
+    public List<Group> getListGroupsByName(String groupName) {
+        return groupDao.getListGroupsByName(groupName);
+    }
+
+    public Group getGroupById(int groupId){
+        return groupDao.getGroupById(groupId);
+    }
+
+
 }

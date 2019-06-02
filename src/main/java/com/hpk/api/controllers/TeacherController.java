@@ -5,10 +5,7 @@ import com.hpk.api.service.TeacherService;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +23,13 @@ public class TeacherController {
     @RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public List<Teacher> getListTeachersBySurname(@ApiParam(value = "Begin surname (characters working with mysql 'LIKE'). If field is empty - get all teachers")@RequestParam(required = false) String teacherSurname){
         return teacherService.getListTeachersBySurname(teacherSurname);
+    }
+
+    @ApiOperation(value = "Get teacher object by id", response = ArrayList.class)
+    @ApiResponses(value = { @ApiResponse(code = 200, message = "Successfully") } )
+    @RequestMapping(value = "/{teacherId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public Teacher getTeacherById(@PathVariable int teacherId){
+        return teacherService.getTeacherById(teacherId);
     }
 
 }

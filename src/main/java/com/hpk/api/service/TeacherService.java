@@ -17,4 +17,8 @@ public class TeacherService {
         return teacherDao.getListTeachersBySurname(teacherSurname);
     }
 
+    public Teacher getTeacherById(int teacherId){
+        return teacherDao.getTeacherById(teacherId);
+    }
+
 }

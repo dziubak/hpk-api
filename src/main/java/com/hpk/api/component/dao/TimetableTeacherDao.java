@@ -20,7 +20,8 @@ public class TimetableTeacherDao {
 
     public List<TimetableTeacher> getTeacherTimetableById(int teacherId, String position, DayOfWeek dayOfWeek) {
         String dayOfWeekCondition = dayOfWeek != null ? " AND day_of_week=':dayOfWeek' " : "";
-        String positionCondtition = position != null ? " AND tt.position=:position " : "";
+        String positionCondition = " AND tt.position='повний'";
+        String positionFullContidion = position != null ? " AND (tt.position=:position OR  tt.position='повний')" : positionCondition;
 
         String sql = "SELECT tt.day_of_week as dayOfWeek, tt.number_of_couple as numberOfCouple, " +
                 "tt.position as position, g.name as groupName, t1.surname as teacherSurname, " +
@@ -31,7 +32,7 @@ public class TimetableTeacherDao {
                 "LEFT JOIN teacher t1 ON tt.teacher_id = t1.id " +
                 "LEFT JOIN classroom c1 ON tt.classroom_id = c1.id " +
                 "LEFT JOIN subject s ON tt.subject_id = s.id " +
-                "WHERE (t1.id=:teacherId) " + positionCondtition
+                "WHERE (t1.id=:teacherId) " + positionFullContidion
                 + dayOfWeekCondition.replace(":dayOfWeek", dayOfWeek.toString()) + " " +
                 "UNION " +
                 "SELECT tt.day_of_week as dayOfWeek, tt.number_of_couple as numberOfCouple, " +
@@ -43,7 +44,7 @@ public class TimetableTeacherDao {
                 "LEFT JOIN teacher t2 ON tt.teacher_second_id = t2.id " +
                 "LEFT JOIN classroom c2 ON tt.classroom_second_id = c2.id " +
                 "LEFT JOIN subject s ON tt.subject_id = s.id " +
-                "WHERE (t2.id=:teacherId) " + positionCondtition
+                "WHERE (t2.id=:teacherId) " + positionFullContidion
                 + dayOfWeekCondition.replace(":dayOfWeek", dayOfWeek.toString());
 
         Map<String, Object> params = new HashMap<>();
