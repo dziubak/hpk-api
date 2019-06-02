@@ -19,7 +19,7 @@ public class TimetableGroupDao {
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
 	public List<TimetableGroup> getGroupTimetableById(int groupId, String position, DayOfWeek dayOfWeek) {
-		String dayOfWeekCondition = dayOfWeek != null ? " AND day_of_week=:dayOfWeek" : "";
+		String dayOfWeekCondition = dayOfWeek != null ? " AND day_of_week=':dayOfWeek'" : "";
 		String positionCondition = " AND tt.position='повний'";
 		String positionFullContidion = position != null ? " AND (tt.position=:position OR  tt.position='повний')" : positionCondition;
 
@@ -35,12 +35,12 @@ public class TimetableGroupDao {
 				"LEFT JOIN classroom c1 ON tt.classroom_id = c1.id " +
 				"LEFT JOIN classroom c2 ON tt.classroom_second_id = c2.id " +
 				"LEFT JOIN subject s ON tt.subject_id = s.id " +
-				"WHERE (g.id=:groupId) " + positionFullContidion + dayOfWeekCondition;
+				"WHERE (g.id=:groupId) " + positionFullContidion
+				+ dayOfWeekCondition.replace(":dayOfWeek", dayOfWeek.toString());
 
 		Map<String, Object> params = new HashMap<>();
 		params.put("groupId", groupId);
 		params.put("position", position);
-		params.put("dayOfWeek", dayOfWeek);
 
 		return namedParameterJdbcTemplate.query(sql, params, new TimetableGroupRowMapper());
 	}

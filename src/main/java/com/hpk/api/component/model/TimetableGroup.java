@@ -9,7 +9,7 @@ public class TimetableGroup {
 	private DayOfWeek dayOfWeek;
 	@ApiModelProperty(notes = "Number of couple (Values: 1, 2, 3, 4 OR 1-2, 3-4, 5-6, 7-8)")
 	private String numberOfCouple;
-	@ApiModelProperty(notes = "Position ((eng: full, ua: повний), (eng: numerator, ua: чисельник), (eng: denominator, ua: знаменник)). Use ua.")
+	@ApiModelProperty(notes = "Position ((eng: numerator, ua: чисельник), (eng: denominator, ua: знаменник)). Use ua.")
 	private String position;
 	@ApiModelProperty(notes = "The group name (full name)")
 	private String groupName;
